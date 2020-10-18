@@ -6,6 +6,7 @@ const $newInput = document.querySelector('.new-todo');
 const $clearCompleted = document.querySelector('.clear-completed');
 const $filters = document.querySelector('.filters');
 const $filtersAnchore = document.querySelectorAll('.filters a');
+const $todoCount = document.querySelector('.todo-count strong');
 
 export const createTodoHtml = (todo) => {
     const htmlTodo = `
@@ -37,6 +38,7 @@ $newInput.addEventListener('keyup', (event) => {
         todoList.addTodo(todo);
         createTodoHtml(todo);
         $newInput.value = '';
+        taskCounter();
     }
 });
 
@@ -48,15 +50,17 @@ $todoList.addEventListener('click', (e) => {
     if (nombreElemento === 'input') {
         todoList.changeDoneTodo(todoId);
         todoElement.classList.toggle('completed');
+        taskCounter();
     } else if (nombreElemento === 'button') {
         todoList.removeTodo(todoId);
         todoElement.remove();
+        taskCounter();
     }
 });
 
 $clearCompleted.addEventListener('click', () => {
     todoList.removeCompleted();
-
+    taskCounter();
     for (let i = $todoList.children.length - 1; i >= 0; i--) {
         const element = $todoList.children[i];
 
@@ -102,3 +106,8 @@ $filters.addEventListener('click', (e) => {
         }
     }
 });
+
+export const taskCounter = () => {
+    const count = todoList.todos.filter((item) => !item.done);
+    $todoCount.innerHTML = count.length;
+};
